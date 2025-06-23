@@ -9,6 +9,21 @@ async function handleGenerateNewShortUrl(req, res){
      const shortid = nanoid(8);
       await URL.create({
        shortId: shortid,
-       redirectURL: 
+       redirectURL: body.url,
+       visitHistory:[],
+      })
+      return res.render('home', {
+        id:shortid,
       })
     }
+
+ async function handleGetAnalytics(req,res){
+ const shortId = req.params.shortId;
+ const result = await URL.findOne({shortId});
+ return res.json({totalClicks: result.visitHistory.length, analytics: result.visitHistory, })
+ } 
+
+module.exports = {
+    handleGenerateNewShortUrl, 
+    handleGetAnalytics,  
+}
